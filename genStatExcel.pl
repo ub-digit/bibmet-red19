@@ -29,7 +29,7 @@ use utf8;
 #use warnings;
 $pwd = `pwd`;
 $pwd =~ s/^\s+|\s+$//g;
-@types = ("dType", "extAuth", "NorList", "gender");
+@types = ("dType", "extAuth", "norList", "gender");
 my $file = "$pwd/departments.txt";
 open my $info, $file or die "A Could not open $file: $!";
 while( my $unitName = <$info>)  {   
