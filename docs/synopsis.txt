@@ -1,0 +1,136 @@
+DBHOST=metrics-lab;BIBMET_DB=bibmet
+psql -tAF"¤" -Upostgres -h "${DBHOST}" "${BIBMET_DB}" < "kolla.sql"
+
+# -------------------------------------------------- #
+# notes                                              #
+# -------------------------------------------------- #
+- När bibliometrikerna kör uppdaterar databasen (prepare_isi.sh eller 
+  prepare_cwts.sh) så tas public-schemat bort och skapas igen. Det 
+  betyder att vår vy försvinner.
+
+# -------------------------------------------------- #
+# commands                                           #
+# -------------------------------------------------- #
+run from .../TEST
+for unit in 1656 1309 1284; do ./dType.sh 5 ${unit} 2013 2017; done
+for unit in 1656 1309 1284; do ./norList.sh ${unit} 2013 2017; done
+for unit in 1656 1309 1284; do ./extAuth.sh ${unit} 2013 2017; done
+./genStatExcel.pl
+
+
+
+rm result/*.x*
+rm -rf dType extAuth gender NorList
+for unit in 1684 1964 1741 ; do ./dType.sh 10 ${unit} 2013 2017; done
+for unit in 1684 1964 1741 ; do ./norList.sh ${unit} 2013 2017; done
+for unit in 1684 1964 1741 ; do ./extAuth.sh ${unit} 2013 2017; done
+for unit in 1684 1964 1741 ; do ./gender.sh ${unit} 2013 2017; done
+./genStatExcel.pl
+
+
+rm result/*.x*
+rm -rf dType extAuth gender NorList
+./dType.sh 10 1235 2013 2017
+./norList.sh 1235 2013 2017
+./extAuthNat.sh 1235 2013 2017
+./gender.sh 1235 2013 2017
+./genStatExcel.pl
+soffice result/1235.xls
+
+# -------------------------------------------------- #
+# CPAN                                               #
+# -------------------------------------------------- #
+apt install libterm-readline-gnu-perl
+i cpan: 
+  install Term::ReadLine::Perl
+  install YAML
+  install Sort::Key::Natural
+  
+  install Spreadsheet::WriteExcel
+
+# -------------------------------------------------- #
+# get sortorder for unit                             #
+# -------------------------------------------------- #
+
+SELECT p_view.publication_type_id,COUNT(DISTINCT p_view.id),p_view.publication_type_label_en
+FROM dev_publications_view p_view
+JOIN people2publications p2p ON p2p.publication_version_id=p_view.publication_version_id
+JOIN departments2people2publications d2p2p ON d2p2p.people2publication_id=p2p.id
+JOIN departments d ON d.id=d2p2p.department_id
+WHERE d.id = 1284 OR d.parentid = 1284 OR d.grandparentid = 1284
+GROUP BY p_view.publication_type_label_en,  p_view.publication_type_id
+ORDER BY count(distinct p_view.id) DESC
+
+
+
+
+# -------------------------------------------------- #
+Resultatformatering:
+
+En Excel-fil per enhet med en flik per diagramtyp.
+
+ FilNamn: {enhetsnummer}.xls
+FlikNamn: {diagram_namn}
+  dType
+  NorList
+  OA
+  extAuth
+  gender
+  WoS
+
+
+# -------------------------------------------------- #
+SELECT p.id, pv.pubyear, pt.label_en, COALESCE(norska.update_level, 0) as update_level
+FROM publications p
+JOIN publication_versions pv ON pv.id=p.current_version_id
+JOIN people2publications p2p ON p2p.publication_version_id=pv.id
+JOIN departments2people2publications d2p2p ON d2p2p.people2publication_id=p2p.id
+JOIN departments d ON d.id=d2p2p.department_id
+JOIN publication_types pt ON pt.id=pv.publication_type_id
+LEFT JOIN (
+    SELECT pubid, update_level, nor_points FROM legnor.handels UNION
+    SELECT pubid, update_level, nor_points FROM legnor.humfak UNION
+    SELECT pubid, update_level, nor_points FROM legnor.it UNION
+    SELECT pubid, update_level, nor_points FROM legnor.natfak UNION
+    SELECT pubid, update_level, nor_points FROM legnor.sa UNION
+    SELECT pubid, update_level, nor_points FROM legnor.samfak UNION
+    SELECT pubid, update_level, nor_points FROM legnor.utbvet
+) AS norska ON norska.pubid=p.id
+WHERE p.deleted_at IS NULL
+AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
+AND (d.id = 1284 OR d.parentid = 1284 OR d.grandparentid = 1284 )
+AND pv.pubyear BETWEEN 2013 AND 2017
+AND pv.publication_type_id = 5
+order by update_level desc
+--AND pv.publication_type_id IN (5, 9, 10)
+
+
+# -------------------------------------------------- #
+TODO
+# -------------------------------------------------- #
+HUMSAM
+[X] dType
+[ ] NorList - ta bort level 0
+[ ] OA
+[X] extAuth
+[ ] gender - håller på med
+
+NAT
+[X] dType
+[ ] NorList - ta bort level 0, ta bort böcker och kapitel
+[ ] OA
+[ ] extAuth - ta med internationella samarbeten
+[ ] gender - håller på med
+[ ] WoS
+
+
+
+
+
+
+for unit in 1234 2345 3456; do ./dType.sh  5 ${unit} 2013 2017; done
+for unit in 1656 1309 1284; do ./dType.sh 10 ${unit} 2013 2017; done
+for unit in 1656 1309 1284; do ./norList.sh ${unit} 2013 2017; done
+for unit in 1656 1309 1284; do ./extAuth.sh ${unit} 2013 2017; done
+
+./genStatExcel.pl extAuth/*csv
