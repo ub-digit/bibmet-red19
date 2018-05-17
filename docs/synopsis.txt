@@ -134,3 +134,10 @@ for unit in 1656 1309 1284; do ./norList.sh ${unit} 2013 2017; done
 for unit in 1656 1309 1284; do ./extAuth.sh ${unit} 2013 2017; done
 
 ./genStatExcel.pl extAuth/*csv
+
+
+./dType.sh 10   1235 2013 2017
+./norList.sh    1235 2013 2017
+./extAuthNat.sh 1235 2013 2017
+./gender.sh     1235 2013 2017
+./genStatExcel.pl
