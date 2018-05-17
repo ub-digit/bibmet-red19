@@ -38,7 +38,7 @@ BIBMET_DB=bibmet                                # used in psql connection
 DEPTID="${1}"
 STARTYEAR="${2}"
 ENDYEAR="${3}"
-OUTDIRNAME="NorList"
+OUTDIRNAME="norList"
 OUTFILENAME="${DEPTID}.csv"
 OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 # -------------------------------------------------- #
@@ -51,7 +51,7 @@ echo "OUTFILEPATH:${OUTFILEPATH}"
 # -------------------------------------------------- #
 # get publication types                              #
 # -------------------------------------------------- #
-pubtypes=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < NorList_pt.sql)
+pubtypes=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < norList_pubtype.sql)
 
 while read -r row
 do 
@@ -93,7 +93,7 @@ done <<<"$pubtypes"
 # -------------------------------------------------- #
 # get data for this unit                             #
 # -------------------------------------------------- #
-data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < NorList_data.sql)
+data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < norList_data.sql)
 
 # skapa upp en array med nollade värden
 declare -A matrix
