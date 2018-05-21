@@ -3,10 +3,10 @@
 #                                                                              #
 #         FILE: genStatExcel.pl                                                #
 #                                                                              #
-#        USAGE: ./genStatExcel.pl                                              #
+#        USAGE: ./genStatExcel.pl departments.txt                              #
 #                                                                              #
-#  DESCRIPTION: take x number of csv files                                     #
-#             : generate one sheet per file with same name as file             #
+#  DESCRIPTION: take one text file as argument                                 #
+#             : this file should be a long list of deptids to process          #
 #                                                                              #
 #      OPTIONS: ---                                                            #
 # REQUIREMENTS: ---                                                            #
@@ -30,7 +30,8 @@ use utf8;
 $pwd = `pwd`;
 $pwd =~ s/^\s+|\s+$//g;
 @types = ("dType", "extAuth", "norList", "gender");
-my $file = "$pwd/departments.txt";
+#my $file = "$pwd/departments.txt";
+my $file = "$pwd/$ARGV[0]";
 open my $info, $file or die "A Could not open $file: $!";
 while( my $unitName = <$info>)  {   
     $unitName =~ s/^\s+|\s+$//g;
