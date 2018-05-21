@@ -26,7 +26,7 @@
 # -------------------------------------------------- #
 # example: doing stuff for each number in a lookup   #
 # -------------------------------------------------- #
-for number in $(echo ${metaLookupHash["Biomedicine 2"]} | tr "," " ")
+for number in $(echo ${metaLookupHash["Biomedicine2"]} | tr "," " ")
 do
   echo "This is the number:${number}:"
 done
@@ -51,7 +51,11 @@ done
 # -------------------------------------------------- #
 # example: using function                            #
 # -------------------------------------------------- #
-metaLookup 'Biomedicine 2'
+metaLookup 'Biomedicine2'
 echo
 echo "function lookup:12345:$(metaLookup 12345 )"
-echo "function lookup:Biomedicine 2:$(metaLookup 'Biomedicine 2')"
+echo "function lookup:Biomedicine2:$(metaLookup 'Biomedicine2')"
+
+# -------------------------------------------------- #
+echo "function lookup:1235:-:$(metaLookup 1235 ):"
+echo "function lookup:Biomedicine2:-:$(metaLookup 'Biomedicine2' ):"

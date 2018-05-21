@@ -18,7 +18,7 @@ FROM (
 	) AS norska ON norska.pubid=p.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id = :DEPTID OR d.parentid = :DEPTID OR d.grandparentid = :DEPTID)
+	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND  :ENDYEAR
 	--AND pv.publication_type_id = 5
 	AND pv.publication_type_id IN (5, 9, 10)

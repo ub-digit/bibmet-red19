@@ -9,7 +9,7 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 		WHEN pfa.tjben_ben LIKE '%ektor, Biträdande%' THEN 'Associate Senior Lecturers'
 		WHEN pfa.tjben_ben LIKE '%ost%' THEN 'Postdocs'
 		WHEN pfa.tjben_ben LIKE '%oktorand%' THEN 'PhD Studentships'
-		ELSE                                      'övriga'
+		ELSE                                      'Other Teaching/Research Staff'
 	END as title, p.id
 	FROM publications p
 	JOIN publication_versions pv ON pv.id=p.current_version_id
@@ -21,7 +21,7 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	JOIN red19.persons_for_analysis pfa ON pfa.xkonto = i.value
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id = :DEPTID OR d.parentid = :DEPTID OR d.grandparentid = :DEPTID)
+	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
 	AND pfa.anstlpnr = 1
@@ -35,6 +35,6 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 		SELECT pubid FROM legnor.utbvet WHERE update_level = 2
 	)
 ) AS prop
-WHERE prop.title NOT IN ('övriga')
+--WHERE prop.title NOT IN ('övriga')
 GROUP BY prop.title, prop.person_kon
 ORDER BY prop.title, prop.person_kon

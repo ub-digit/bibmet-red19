@@ -24,6 +24,13 @@ function argCheck(){
   if [[ "$#" -ne 4 ]]; 
   then 
     echo "# -------------------------------------------------- #"
+    echo "\$0:${0}:"
+    echo "\$1:${1}:"
+    echo "\$2:${2}:"
+    echo "\$3:${3}:"
+    echo "\$4:${4}:"
+    echo "\$5:${5}:"
+    echo "# -------------------------------------------------- #"
     echo "# need four args:"
     echo "#   {numberOfPubTypes} {unitId} {startyear} {endyear}"
     echo "# Example:"
@@ -33,14 +40,19 @@ function argCheck(){
   fi
 }
 argCheck "${@}"
+. metaLookup.sh
 DBHOST=130.241.35.144                           # used in psql connection
 BIBMET_DB=bibmet                                # used in psql connection 
 numberOfPublicationtypes="${1}"                 # explicit results for the first 10 publication types, rest will be aggregated
 DEPTID="${2}"
+echo "DEPTID:$DEPTID:"
 STARTYEAR="${3}"
 ENDYEAR="${4}"
 OUTDIRNAME="dType"
 OUTFILENAME="${DEPTID}.csv"
+echo "DEPTID:${DEPTID}:"
+DEPTID="$(metaLookup ${DEPTID} )"
+echo "DEPTID:${DEPTID}:"
 OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 # -------------------------------------------------- #
 mkdir -p "${OUTDIRNAME}"

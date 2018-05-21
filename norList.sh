@@ -33,6 +33,7 @@ function argCheck(){
   fi
 }
 argCheck "${@}"
+. metaLookup.sh
 DBHOST=130.241.35.144                           # used in psql connection
 BIBMET_DB=bibmet                                # used in psql connection 
 DEPTID="${1}"
@@ -40,6 +41,7 @@ STARTYEAR="${2}"
 ENDYEAR="${3}"
 OUTDIRNAME="norList"
 OUTFILENAME="${DEPTID}.csv"
+DEPTID="$(metaLookup ${DEPTID} )"
 OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 # -------------------------------------------------- #
 mkdir -p "${OUTDIRNAME}"
@@ -217,7 +219,8 @@ done
 for pt in 5 9 10
 do
   
-  for level in -1 0 1 2
+  #for level in -1 0 1 2
+  for level in -1 1 2
   do
 
     if [ $level -eq "-1" ] 

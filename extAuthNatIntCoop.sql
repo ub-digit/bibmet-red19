@@ -11,7 +11,7 @@ JOIN departments d ON d.id=d2p2p.department_id
 --JOIN people pe ON pe.id=p2p.person_id
 WHERE p.deleted_at IS NULL
 AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-AND (d.id = :DEPTID OR d.parentid = :DEPTID OR d.grandparentid = :DEPTID)
+AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 AND pv.pubyear between :STARTYEAR AND :ENDYEAR 
 AND p.id in (
 	SELECT p.id

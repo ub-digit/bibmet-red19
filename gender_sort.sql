@@ -21,7 +21,7 @@ SELECT prop.title, COUNT(prop.id) FROM (
 	JOIN red19.persons_for_analysis pfa ON pfa.xkonto = i.value
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id = :DEPTID OR d.parentid = :DEPTID OR d.grandparentid = :DEPTID)
+	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
 	AND pfa.anstlpnr = 1
