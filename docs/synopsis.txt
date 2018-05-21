@@ -152,3 +152,22 @@ for unit in 1656 1309 1284; do ./extAuth.sh ${unit} 2013 2017; done
 ./extAuthNat.sh 1235 2013 2017
 ./gender.sh     1235 2013 2017
 ./genStatExcel.pl
+
+
+
+
+# ----------------------------------------------- #
+# Följande Deptid hör till Natfak och SA
+select id 
+from departments 
+where faculty_id in ('65', '81') -- detta är Natfak och SA
+and (start_year < 2014 or start_year is null)
+and (end_year > 2016 or end_year is null)
+
+# Följande Deptid hör INTE till Natfak och SA
+select id 
+from departments 
+where faculty_id not in ('65', '81') -- detta är INTE Natfak och SA
+and (start_year < 2014 or start_year is null)
+and (end_year > 2016 or end_year is null)
+# ----------------------------------------------- #
