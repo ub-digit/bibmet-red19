@@ -20,7 +20,7 @@ for unit in 1656 1309 1284; do ./extAuth.sh ${unit} 2013 2017; done
 
 
 rm result/*.x*
-rm -rf dType extAuth gender NorList
+rm -rf dType extAuth gender norList
 for unit in 1684 1964 1741 ; do ./dType.sh 10 ${unit} 2013 2017; done
 for unit in 1684 1964 1741 ; do ./norList.sh ${unit} 2013 2017; done
 for unit in 1684 1964 1741 ; do ./extAuth.sh ${unit} 2013 2017; done
@@ -29,7 +29,7 @@ for unit in 1684 1964 1741 ; do ./gender.sh ${unit} 2013 2017; done
 soffice result/*.xls
 
 rm result/*.x*
-rm -rf dType extAuth gender NorList
+rm -rf dType extAuth gender norList
 ./dType.sh 10 1235 2013 2017
 ./norList.sh 1235 2013 2017
 ./extAuthNat.sh 1235 2013 2017
@@ -38,7 +38,7 @@ rm -rf dType extAuth gender NorList
 soffice result/1235.xls
 
 rm result/*.x*
-rm -rf dType extAuth gender NorList
+rm -rf dType extAuth gender norList
 for unit in 1684 1964 1741 "Biomedicine1" "Biomedicine2" "Biomedicine3" ; do ./dType.sh 10 ${unit} 2013 2017; done
 for unit in 1684 1964 1741 "Biomedicine1" "Biomedicine2" "Biomedicine3" ; do ./norList.sh ${unit} 2013 2017; done
 for unit in 1684 1964 1741 "Biomedicine1" "Biomedicine2" "Biomedicine3" ; do ./extAuthNat.sh ${unit} 2013 2017; done
@@ -83,7 +83,7 @@ En Excel-fil per enhet med en flik per diagramtyp.
  FilNamn: {enhetsnummer}.xls
 FlikNamn: {diagram_namn}
   dType
-  NorList
+  norList
   OA
   extAuth
   gender
@@ -115,20 +115,24 @@ AND pv.publication_type_id = 5
 order by update_level desc
 --AND pv.publication_type_id IN (5, 9, 10)
 
+# -------------------------------------------------- #
+# legnor.master_2018 skall användas istället för ovan union
+# -------------------------------------------------- #
+
 
 # -------------------------------------------------- #
 TODO
 # -------------------------------------------------- #
 HUMSAM
 [X] dType
-[ ] NorList - ta bort level 0
+[ ] norList - ta bort level 0
 [ ] OA
 [X] extAuth
 [ ] gender - håller på med
 
 NAT
 [X] dType
-[ ] NorList - ta bort level 0, ta bort böcker och kapitel
+[ ] norList - ta bort level 0, ta bort böcker och kapitel
 [ ] OA
 [ ] extAuth - ta med internationella samarbeten
 [ ] gender - håller på med
@@ -171,3 +175,8 @@ where faculty_id not in ('65', '81') -- detta är INTE Natfak och SA
 and (start_year < 2014 or start_year is null)
 and (end_year > 2016 or end_year is null)
 # ----------------------------------------------- #
+
+
+TODO!
+180522: - kontrollera hur dType.sh får sina värden. Vi har lite för höga siffror så troligtvis räknar vi med "för mycket"
+        - Det verkar korrekt, siffrorna överensstämmer med GUP. Den visar alla publikationer för den institutionen.

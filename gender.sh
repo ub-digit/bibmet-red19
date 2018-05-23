@@ -48,7 +48,7 @@ mkdir -p "${OUTDIRNAME}"
 #declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
 #declare -A yearSum  
 declare -A category                            # associative array 
-#echo "OUTFILEPATH:${OUTFILEPATH}"
+echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve sort order, see get_sortorder.sql
 # -------------------------------------------------- #
@@ -109,6 +109,24 @@ done
 #echo "${category[${x},${y}]}"
 
 #matrix[$pt,$year,$level]="0"
+let mtot=0
+let ktot=0
+for gs in $genderSort
+do
+  title=${gs%¤*}
+  m=${category[${title},"M"]}
+  if [ -z "$m" ]; then
+    m="0"
+  fi
+  mtot=$(( $mtot + $m ))
+
+  k=${category[${title},"K"]}
+  if [ -z "$k" ]; then
+    k="0"
+  fi
+  ktot=$(( $ktot + $k ))
+done;
+
 for gs in $genderSort
 do
 #echo $gs
@@ -119,6 +137,7 @@ do
   if [ -z "$m" ]; then
     m="0"
   fi
+  #echo "mtot:${mtot}:"
   #echo "m:${m}:"
   k=${category[${title},"K"]}
   #echo "k:${k}:"
@@ -127,14 +146,25 @@ do
   fi
   #echo "k:${k}:"
   #echo "$title"
-  mp=$(( 100*${m}/(${m}+${k}) ))
-  kp=$(( 100*${k}/(${m}+${k}) ))
-  echo "title:${title}:m:${m}:k:${k}:mp:${mp}:kp:${kp}:"
+  #mp=$(( 100*${m}/(${m}+${k}) ))
+  #kp=$(( 100*${k}/(${m}+${k}) ))
+  if [ $mtot != 0 ]; then
+    mp=$(( 100*${m}/(${mtot}) ))
+  else
+    mp=0
+  fi
+  if [ $ktot != 0 ]; then
+    kp=$(( 100*${k}/(${ktot}) ))
+  else
+    kp=0
+  fi
+
+  #echo "title:${title}:m:${m}:k:${k}:mp:${mp}:kp:${kp}:"
   #result="${result},${percent}%"
   result="${result}${title},${k},${kp}%,${m},${mp}%
 "
-  echo "${result}"
-  echo " "
+  #echo "${result}"
+  #echo " "
   #echo ${category[${title},"M"]}
   #echo ${category[${title},"K"]}
   #echo "m:${m}:"

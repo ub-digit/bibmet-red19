@@ -45,20 +45,20 @@ DBHOST=130.241.35.144                           # used in psql connection
 BIBMET_DB=bibmet                                # used in psql connection 
 numberOfPublicationtypes="${1}"                 # explicit results for the first 10 publication types, rest will be aggregated
 DEPTID="${2}"
-echo "DEPTID:$DEPTID:"
+#echo "DEPTID:$DEPTID:"
 STARTYEAR="${3}"
 ENDYEAR="${4}"
 OUTDIRNAME="dType"
 OUTFILENAME="${DEPTID}.csv"
-echo "DEPTID:${DEPTID}:"
+#echo "DEPTID:${DEPTID}:"
 DEPTID="$(metaLookup ${DEPTID} )"
-echo "DEPTID:${DEPTID}:"
+#echo "DEPTID:${DEPTID}:"
 OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 # -------------------------------------------------- #
 mkdir -p "${OUTDIRNAME}"
 declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
 declare -A yearSum                              # associative array 
-echo "OUTFILEPATH:${OUTFILEPATH}"
+echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve sort order, see get_sortorder.sql
 # -------------------------------------------------- #

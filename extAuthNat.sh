@@ -49,7 +49,7 @@ declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
 #declare -A pYear pPubs cYear cPubs
 declare -A totalList coopList intList
 declare -A totarray cooparray intarray
-echo "OUTFILEPATH:${OUTFILEPATH}"
+echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve the data
 # -------------------------------------------------- #
@@ -57,6 +57,14 @@ total=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEA
 cooptot=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < extAuthNatCoop.sql)
 coopint=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < extAuthNatIntCoop.sql)
 
+
+# Initialize
+for y in "${yearList[@]}"
+do
+  totarray[${y}]=0
+  cooparray[${y}]=0
+  intarray[${y}]=0
+done
 
 newline="
 "
@@ -90,20 +98,33 @@ done
 #echo "${totarray[@]}"
 for y in "${yearList[@]}"
 do
-  x=$(( 100*${cooparray[$y]}/${totarray[$y]} ))
+  if [ "${totarray[$y]}" -eq "0" ]; then
+    x=0
+  else
+    #if [ "${cooparray[$y]}" -eq "0" ]; then
+    #  x=0
+    #else
+      x=$(( 100*${cooparray[$y]}/${totarray[$y]} ))
+    #fi
+  fi
+
   result=$(printf '%s,%s%%' "$result" "$x" )
 done
 result=$(printf '%s\n%s' "$result" "int. co-authored publications")
 
 for y in "${yearList[@]}"
 do
-  x=$(( 100*${intarray[$y]}/${totarray[$y]} ))
+  if [ "${totarray[$y]}" -eq "0" ]; then
+    x=0
+  else
+    x=$(( 100*${intarray[$y]}/${totarray[$y]} ))
+  fi
   result=$(printf '%s,%s%%' "$result" "$x" )
 done
 
 echo "${result}" > $OUTFILEPATH
-echo "${result}"
-cat $OUTFILEPATH
+#echo "${result}"
+#cat $OUTFILEPATH
 exit
 
 for c in $cooptot

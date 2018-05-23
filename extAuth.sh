@@ -47,7 +47,7 @@ OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 mkdir -p "${OUTDIRNAME}"
 declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
 declare -A pYear pPubs cYear cPubs
-echo "OUTFILEPATH:${OUTFILEPATH}"
+echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve the data
 # -------------------------------------------------- #

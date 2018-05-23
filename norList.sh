@@ -48,7 +48,7 @@ mkdir -p "${OUTDIRNAME}"
 declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
 declare -A yearSum                              # associative array 
 declare -A publication_types
-echo "OUTFILEPATH:${OUTFILEPATH}"
+echo "Processing ${OUTFILEPATH}"
 
 # -------------------------------------------------- #
 # get publication types                              #
@@ -149,9 +149,12 @@ do
       row=$(grep "^${year}¤${level}¤${pt}" <<< "$data")
 #      echo "    working on ${year}"  >> tmpfil.txt
       #noOfPublications="$row"
+    #echo "row:${row}:"
       noOfPublications=${row##*¤}
+    #echo "noOfPublications:${noOfPublications}:"
       pt_label="${row#*¤*¤*¤}"
       pt_label="${pt_label%¤*}"
+    #echo "pt_label:${pt_label}:"
       if [ ! -z "$noOfPublications" ]; 
       then
         matrix[$pt,$year,$level]=$noOfPublications;
@@ -249,6 +252,10 @@ do
     printf -v result "${result}\n"
 
   done
+
+#${yearSum[$pt,$year]}
+#${matrix[$pt,$year,$level]}
+
   
   #printf -v result "${result}\n"
 
