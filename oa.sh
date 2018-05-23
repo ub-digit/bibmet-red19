@@ -21,7 +21,7 @@
 #      REVISION:  ---
 # ============================================================================ #
 function argCheck(){
-  if [[ "$#" -ne 4 ]]; 
+  if [[ "$#" -ne 3 ]]; 
   then 
     echo "# -------------------------------------------------- #"
     echo "# need four args:"
@@ -36,11 +36,10 @@ argCheck "${@}"
 . metaLookup.sh
 DBHOST=130.241.35.144                           # used in psql connection
 BIBMET_DB=bibmet                                # used in psql connection 
-numberOfPublicationtypes="${1}"                 # explicit results for the first 10 publication types, rest will be aggregated
-DEPTID="${2}"
-STARTYEAR="${3}"
-ENDYEAR="${4}"
-OUTDIRNAME="dType"
+DEPTID="${1}"
+STARTYEAR="${2}"
+ENDYEAR="${3}"
+OUTDIRNAME="oa"
 OUTFILENAME="${DEPTID}.csv"
 DEPTID="$(metaLookup ${DEPTID} )"
 OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
@@ -48,54 +47,59 @@ OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 mkdir -p "${OUTDIRNAME}"
 declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
 declare -A yearSum                              # associative array 
-echo "OUTFILEPATH:${OUTFILEPATH}"
-# -------------------------------------------------- #
-# retrieve sort order, see get_sortorder.sql
-# -------------------------------------------------- #
-sortIx=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" "${BIBMET_DB}" < dType_order.sql)
-# -------------------------------------------------- #
-# split each row into elements in two arrays: pubTypeId and pubTypeLabel
-# -------------------------------------------------- #
-IFS=$'\n'
-c=1
-p=1
-for item in $sortIx
-do
-  myId=${item%¤$(echo ${item#*¤})}
-  if [[ $c -le ${numberOfPublicationtypes} ]]
-  then
-    pubTypeId[${c}]=${myId}
-    pubTypeLabel[${c}]=${item##*¤}
-    ((c++))
-  else
-    aggId[${p}]=${myId}
-    ((p++))
-  fi
-done
+echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # get data for this unit                             #
 # -------------------------------------------------- #
-data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < dType_data.sql)
+data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < oa.sql)
 # create header line (header and each of the years)
 printf -v result "Document type, $(IFS=, ; echo "${yearList[*]}")\n"
-for ((ptid=1;ptid<=numberOfPublicationtypes;ptid++))
+printf -v result "${result}Journal articles"
+
+# Läs in data till en array
+IFS=$'\n'
+#c=1
+#p=1
+for d in $data
 do
-  p=${pubTypeId[$ptid]}
-  result="${result}${pubTypeLabel[$ptid]}"
-  for year in  "${yearList[@]}"
-  do
-    row=$(grep "^${p}¤${year}" <<< "$data")
-    if [[ -z "$row" ]]
-    then
-      result="${result},0"
-    else
-      idYearVal=${row##*¤}
-      ((yearSum[${year}]+=${idYearVal}))
-      result="${result},${idYearVal}"
-    fi
-  done
-      printf -v result "${result}\n"
+  year=${d%%¤*}
+  pubs=${d##*¤}
+  yearSum[$year]=$pubs
+  #myId=${item%¤$(echo ${item#*¤})}
+  #if [[ $c -le ${numberOfPublicationtypes} ]]
+  #then
+  #  pubTypeId[${c}]=${myId}
+  #  pubTypeLabel[${c}]=${item##*¤}
+  # ((c++))
+  #else
+  #  aggId[${p}]=${myId}
+  #  ((p++))
+  #fi
 done
+
+for year in  "${yearList[@]}"
+do
+  if [ -z "${yearSum[${year}]}" ]; then
+    pubs=0
+  else
+    pubs=${yearSum[${year}]}
+  fi
+  printf -v result "${result},${pubs}"
+#    row=$(grep "^${p}¤${year}" <<< "$data")
+#    if [[ -z "$row" ]]
+#    then
+#      result="${result},0"
+#    else
+#      idYearVal=${row##*¤}
+#      ((yearSum[${year}]+=${idYearVal}))
+#      result="${result},${idYearVal}"
+#    fi
+done
+#echo $result
+#exit
+echo "${result}" > $OUTFILEPATH
+exit
+#      printf -v result "${result}\n"
 # -------------------------------------------------- #
 # 
 result="${result}Other"
