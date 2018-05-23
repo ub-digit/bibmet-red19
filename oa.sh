@@ -58,23 +58,11 @@ printf -v result "${result}Journal articles"
 
 # Läs in data till en array
 IFS=$'\n'
-#c=1
-#p=1
 for d in $data
 do
   year=${d%%¤*}
   pubs=${d##*¤}
   yearSum[$year]=$pubs
-  #myId=${item%¤$(echo ${item#*¤})}
-  #if [[ $c -le ${numberOfPublicationtypes} ]]
-  #then
-  #  pubTypeId[${c}]=${myId}
-  #  pubTypeLabel[${c}]=${item##*¤}
-  # ((c++))
-  #else
-  #  aggId[${p}]=${myId}
-  #  ((p++))
-  #fi
 done
 
 for year in  "${yearList[@]}"
@@ -85,66 +73,5 @@ do
     pubs=${yearSum[${year}]}
   fi
   printf -v result "${result},${pubs}"
-#    row=$(grep "^${p}¤${year}" <<< "$data")
-#    if [[ -z "$row" ]]
-#    then
-#      result="${result},0"
-#    else
-#      idYearVal=${row##*¤}
-#      ((yearSum[${year}]+=${idYearVal}))
-#      result="${result},${idYearVal}"
-#    fi
 done
-#echo $result
-#exit
 echo "${result}" > $OUTFILEPATH
-exit
-#      printf -v result "${result}\n"
-# -------------------------------------------------- #
-# 
-result="${result}Other"
-for year in  "${yearList[@]}"
-do
-  let summa=0
-  for aid in ${aggId[@]}
-  do
-    row=$(grep "^${aid}¤${year}" <<< "$data")
-    if [[ -z "$row" ]]
-    then
-      addend=0
-    else
-      addend=${row##*¤}
-    fi
-    summa=$((${summa} + ${addend}))
-  done
-  result="${result},${summa}"
-  ((yearSum[${year}]+=${summa}))
-done
-printf -v result "${result}\nTotal"
-for year in  "${yearList[@]}"
-do
-  result="${result},${yearSum[${year}]}"
-done
-# -------------------------------------------------- #
-
-echo "${result}" > $OUTFILEPATH
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

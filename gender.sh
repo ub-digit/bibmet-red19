@@ -45,8 +45,6 @@ DEPTID="$(metaLookup ${DEPTID} )"
 OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 # -------------------------------------------------- #
 mkdir -p "${OUTDIRNAME}"
-#declare -a yearList=($(seq  "${ENDYEAR}" -1 "${STARTYEAR}"))  # array
-#declare -A yearSum  
 declare -A category                            # associative array 
 echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
@@ -60,55 +58,19 @@ genderData=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v ST
 # split each row into elements in two arrays: pubTypeId and pubTypeLabel
 # -------------------------------------------------- #
 
-#echo "genderTotal:$genderTotal:"
-#echo "genderLevel2:$genderLevel2:"
-#cho "genderSort:$genderSort:"
-#echo "genderData:$genderData:"
 printf -v result ",Women,,Men\nStaff category,publications,share of level 2,publications,share of level 2\n"
 
 IFS=$'\n'
 
 for gd in $genderData
 do
-  #nop=${gd##*¤}
-  #gender=${gd%%¤*}
-  #part_title=${gd%¤*}
-  #title=${part_title#*¤}
-  #echo "gd:${gd}:"
   nop=${gd##*¤}
-  #echo "nop:${nop}:"
-
   rest=${gd%¤*}
-  #echo "rest:${rest}:"
-
   gender=${rest##*¤}
-  #echo "gender:${gender}:"
-  
   title=${rest%¤*}
-  #echo "title:${title}:"
-  
-
-#var="teCertificateId"
-#var2="${var#te}"
-#echo "${var2%Id}"
-
-#  title=${title//Förekomst Saknas/Okänd}
-  #title=${title//[åä]/a}
-  #title=${title//ö/o}
-  #title=${title// /blanksteg}
-  #title=${title//,/komma}
-  #echo "- nop:$nop:gender:$gender:title:$title:"
   category["${title}","${gender}"]=$nop
-
 done
 
-#x="Professor"
-#y="M"
-#echo "${category[${x},${y}]}"
-#y="K"
-#echo "${category[${x},${y}]}"
-
-#matrix[$pt,$year,$level]="0"
 let mtot=0
 let ktot=0
 for gs in $genderSort
@@ -129,25 +91,15 @@ done;
 
 for gs in $genderSort
 do
-#echo $gs
   title=${gs%¤*}
-  #echo "title:${title}:"
   m=${category[${title},"M"]}
-  #echo "m:${m}:"
   if [ -z "$m" ]; then
     m="0"
   fi
-  #echo "mtot:${mtot}:"
-  #echo "m:${m}:"
   k=${category[${title},"K"]}
-  #echo "k:${k}:"
   if [ -z "$k" ]; then
     k="0"
   fi
-  #echo "k:${k}:"
-  #echo "$title"
-  #mp=$(( 100*${m}/(${m}+${k}) ))
-  #kp=$(( 100*${k}/(${m}+${k}) ))
   if [ $mtot != 0 ]; then
     mp=$(( 100*${m}/(${mtot}) ))
   else
@@ -159,92 +111,9 @@ do
     kp=0
   fi
 
-  #echo "title:${title}:m:${m}:k:${k}:mp:${mp}:kp:${kp}:"
-  #result="${result},${percent}%"
   result="${result}${title},${k},${kp}%,${m},${mp}%
 "
-  #echo "${result}"
-  #echo " "
-  #echo ${category[${title},"M"]}
-  #echo ${category[${title},"K"]}
-  #echo "m:${m}:"
-  #echo "k:${k}:"
-  #echo " "
 done
-
-#echo ${result} > testfil.csv
-echo "${result}" > $OUTFILEPATH
-
-exit
-# -------------------------------------------------- #
-# get data for this unit                             #
-# -------------------------------------------------- #
-data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < dType_data.sql)
-# create header line (header and each of the years)
-printf -v result "Document type, $(IFS=, ; echo "${yearList[*]}")\n"
-for ((ptid=1;ptid<=numberOfPublicationtypes;ptid++))
-do
-  p=${pubTypeId[$ptid]}
-  result="${result}${pubTypeLabel[$ptid]}"
-  for year in  "${yearList[@]}"
-  do
-    row=$(grep "^${p}¤${year}" <<< "$data")
-    if [[ -z "$row" ]]
-    then
-      result="${result},0"
-    else
-      idYearVal=${row##*¤}
-      ((yearSum[${year}]+=${idYearVal}))
-      result="${result},${idYearVal}"
-    fi
-  done
-      printf -v result "${result}\n"
-done
-# -------------------------------------------------- #
-# 
-result="${result}Other"
-for year in  "${yearList[@]}"
-do
-  let summa=0
-  for aid in ${aggId[@]}
-  do
-    row=$(grep "^${aid}¤${year}" <<< "$data")
-    if [[ -z "$row" ]]
-    then
-      addend=0
-    else
-      addend=${row##*¤}
-    fi
-    summa=$((${summa} + ${addend}))
-  done
-  result="${result},${summa}"
-  ((yearSum[${year}]+=${summa}))
-done
-printf -v result "${result}\nTotal"
-for year in  "${yearList[@]}"
-do
-  result="${result},${yearSum[${year}]}"
-done
-# -------------------------------------------------- #
 
 echo "${result}" > $OUTFILEPATH
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
