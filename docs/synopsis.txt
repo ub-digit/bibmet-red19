@@ -125,21 +125,24 @@ TODO
 # -------------------------------------------------- #
 HUMSAM
 [X] dType
-[ ] norList - ta bort level 0
-[ ] OA
+[X] norList - ta bort level 0
+[X] OA
 [X] extAuth
-[ ] gender - håller på med
+[ ] gender
+  [ ] gender - NonSA en kolumn med PNor hur många i antal som finns med i legnor, "share of level 2" skall räkna mot PNor istället för "publications"
 
 NAT
 [X] dType
-[ ] norList - ta bort level 0, ta bort böcker och kapitel
-[ ] OA
-[ ] extAuth - ta med internationella samarbeten
-[ ] gender - håller på med
-[ ] WoS
+[X] norList - ta bort level 0
+[X] norList - ta bort böcker och kapitel
+[X] OA
+[X] extAuth - ta med internationella samarbeten
+[ ] gender
+  [ ] gender - SA    en kolumn med PWos hur många i antal som finns med i WoS,    "top 10%" skall räkna mot cwts.fielddata, endast där n*% >= 90
+[X] WoS - skall antagligen inte göras
 
 
-
+[x] norList - article (5) och review article (22) skall buntas ihop till en (article - 5)
 
 
 
@@ -177,6 +180,10 @@ and (end_year > 2016 or end_year is null)
 # ----------------------------------------------- #
 
 
-TODO!
-180522: - kontrollera hur dType.sh får sina värden. Vi har lite för höga siffror så troligtvis räknar vi med "för mycket"
-        - Det verkar korrekt, siffrorna överensstämmer med GUP. Den visar alla publikationer för den institutionen.
+
+
+
+Frågor till Bibliometrikerna:
+[ ] 1a. Vilka institutioner på SA/NatFak skall vi köra detta på?
+[ ] 1b. Vilka institutioner på övriga fakulteter skall vi köra detta på?
+

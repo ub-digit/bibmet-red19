@@ -85,19 +85,25 @@ done
 # create header line (header and each of the years)
 printf -v result "Document type/level, $(IFS=, ; echo "${yearList[*]}")\n"
 
-for pt in 5 9 10
+for pt in 5 9 10 22
 do
+  
   for level in 0 1 2
   do
     for year in "${yearList[@]}"
     do
       row=$(grep "^${year}¤${level}¤${pt}" <<< "$data")
-      noOfPublications=${row##*¤}
-      pt_label="${row#*¤*¤*¤}"
-      pt_label="${pt_label%¤*}"
+      noOfPublications=${row##*¤}           # remove everything but last position (number of publications)
+      pt_label="${row#*¤*¤*¤}"              # remove first three positions from row, remainer: label and number of publications
+      pt_label="${pt_label%¤*}"             # remove everything but label
       if [ ! -z "$noOfPublications" ]; 
       then
-        matrix[$pt,$year,$level]=$noOfPublications;
+        if [ "$pt" -eq "22" ] 
+        then
+          (( matrix["5",$year,$level]+=$noOfPublications ))
+        else
+         (( matrix[$pt,$year,$level]+=$noOfPublications ))
+        fi
       fi
       if [ ! -z "$pt_label" ];
       then

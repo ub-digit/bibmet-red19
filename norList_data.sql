@@ -20,9 +20,9 @@ FROM (
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
 	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
-	AND pv.pubyear BETWEEN :STARTYEAR AND  :ENDYEAR
+	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR
 	--AND pv.publication_type_id = 5
-	AND pv.publication_type_id IN (5, 9, 10)
+	AND pv.publication_type_id IN (5, 9, 10, 22)
 ) AS pubs
 GROUP BY pubs.pubyear, pubs.publication_type_id, pubs.publication_type_label_en, update_level
 ORDER BY pubs.pubyear, pubs.publication_type_id, update_level

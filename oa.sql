@@ -13,5 +13,5 @@ AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR
 AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 AND pi.identifier_code = 'doi'
 AND oa.is_oa = 'True'
-AND pv.publication_type_id = 5
+AND pv.publication_type_id IN (5,22)
 GROUP BY pv.pubyear

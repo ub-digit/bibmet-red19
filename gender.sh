@@ -21,13 +21,15 @@
 #      REVISION:  ---
 # ============================================================================ #
 function argCheck(){
-  if [[ "$#" -ne 3 ]]; 
+  if [[ "$#" -ne 4 ]]; 
   then 
     echo "# -------------------------------------------------- #"
     echo "# need four args:"
     echo "#    {unitId} {startyear} {endyear}"
     echo "# Example:"
-    echo "#   ./gender.sh 1284 2012 2015"
+    echo "#   ./gender.sh 1284 2012 2015 na"
+    echo "#   or"
+    echo "#   ./gender.sh 1284 2012 2015 hu"
     echo "# -------------------------------------------------- #"
     exit;
   fi
@@ -39,6 +41,8 @@ BIBMET_DB=bibmet                                # used in psql connection
 DEPTID="${1}"
 STARTYEAR="${2}"
 ENDYEAR="${3}"
+VARIANT="${4}"
+
 OUTDIRNAME="gender"
 OUTFILENAME="${DEPTID}.csv"
 DEPTID="$(metaLookup ${DEPTID} )"
@@ -50,15 +54,17 @@ echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve sort order, see get_sortorder.sql
 # -------------------------------------------------- #
-genderTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_total.sql)
-genderLevel2=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_level2.sql)
-genderSort=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_sort.sql)
-genderData=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_data.sql)
+#genderTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_total.sql)
+#genderLevel2=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_level2.sql)
+genderSort=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_sort_${VARIANT}.sql")
+genderData=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_data_${VARIANT}.sql")
 # -------------------------------------------------- #
 # split each row into elements in two arrays: pubTypeId and pubTypeLabel
 # -------------------------------------------------- #
 
 printf -v result ",Women,,Men\nStaff category,publications,share of level 2,publications,share of level 2\n"
+
+echo $genderData >> gender/"${DEPTID}".txt
 
 IFS=$'\n'
 
