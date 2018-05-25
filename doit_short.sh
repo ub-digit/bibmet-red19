@@ -8,8 +8,14 @@ for unit in 1759 1760 1761 1772 ClinicalSciences1 ; do ./extAuthNat.sh ${unit} 2
 for unit in 1759 1760 1761 1772 ClinicalSciences1 ; do ./oa.sh         ${unit} 2013 2017; done
 for unit in 1759 1760 1761 1772 ClinicalSciences1 ; do ./gender.sh     ${unit} 2013 2017 na; done
 
+for unit in 1849 1514 1776 1653 1870 1871 1637 1750 1751 1752 ; do ./dType.sh    5 ${unit} 2013 2017; done
+for unit in 1849 1514 1776 1653 1870 1871 1637 1750 1751 1752 ; do ./norList.sh    ${unit} 2013 2017; done
+for unit in 1849 1514 1776 1653 1870 1871 1637 1750 1751 1752 ; do ./extAuth.sh    ${unit} 2013 2017; done
+for unit in 1849 1514 1776 1653 1870 1871 1637 1750 1751 1752 ; do ./oa.sh         ${unit} 2013 2017; done
+for unit in 1849 1514 1776 1653 1870 1871 1637 1750 1751 1752 ; do ./gender.sh     ${unit} 2013 2017 hu; done
 
 ./genStatExcel.pl departments_sa_short.txt
+./genStatExcel.pl departments_non_sa_short.txt
 
 #soffice result/*.xls
 

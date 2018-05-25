@@ -50,19 +50,25 @@ OUTFILEPATH="${OUTDIRNAME}/${OUTFILENAME}"
 # -------------------------------------------------- #
 mkdir -p "${OUTDIRNAME}"
 declare -A category                            # associative array 
+declare -A categoryTotal                       # associative array 
 echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve sort order, see get_sortorder.sql
 # -------------------------------------------------- #
 #genderTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_total.sql)
 #genderLevel2=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_level2.sql)
-genderSort=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_sort_${VARIANT}.sql")
+titleSort=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "title_sort_${VARIANT}.sql")
 genderData=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_data_${VARIANT}.sql")
+genderDataTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_data_total_${VARIANT}.sql")
 # -------------------------------------------------- #
 # split each row into elements in two arrays: pubTypeId and pubTypeLabel
 # -------------------------------------------------- #
 
-printf -v result ",Women,,Men\nStaff category,publications,share of level 2,publications,share of level 2\n"
+if [ "${VARIANT}" = "hu" ]; then
+  printf -v result ",Women,,,Men\nStaff category,P,PNor,%%Level 2,P,PNor,%%Level 2\n"
+else
+  printf -v result ",Women,,,Men\nStaff category,P,PWos,Top 10%%,P,PWos,Top 10%%\n"
+fi
 
 echo $genderData >> gender/"${DEPTID}".txt
 
@@ -77,34 +83,53 @@ do
   category["${title}","${gender}"]=$nop
 done
 
+for gdt in $genderDataTotal
+do
+  nop=${gdt##*¤}
+  rest=${gdt%¤*}
+  gender=${rest##*¤}
+  title=${rest%¤*}
+  categoryTotal["${title}","${gender}"]=$nop
+done
+
 let mtot=0
 let ktot=0
-for gs in $genderSort
+for gs in $titleSort
 do
   title=${gs%¤*}
   m=${category[${title},"M"]}
+  #mt=${categoryTotal[${title},"M"]}
   if [ -z "$m" ]; then
     m="0"
   fi
   mtot=$(( $mtot + $m ))
 
   k=${category[${title},"K"]}
+  #kt=${categoryTitle[${title},"K"]}
   if [ -z "$k" ]; then
     k="0"
   fi
   ktot=$(( $ktot + $k ))
 done;
 
-for gs in $genderSort
+for gs in $titleSort
 do
   title=${gs%¤*}
   m=${category[${title},"M"]}
   if [ -z "$m" ]; then
     m="0"
   fi
+  mt=${categoryTotal[${title},"M"]}
+  if [ -z "$mt" ]; then
+    mt="0"
+  fi
   k=${category[${title},"K"]}
   if [ -z "$k" ]; then
     k="0"
+  fi
+  kt=${categoryTotal[${title},"K"]}
+  if [ -z "$kt" ]; then
+    kt="0"
   fi
   if [ $mtot != 0 ]; then
     mp=$(( 100*${m}/(${mtot}) ))
@@ -117,7 +142,7 @@ do
     kp=0
   fi
 
-  result="${result}${title},${k},${kp}%,${m},${mp}%
+  result="${result}${title},${kt},${k},${kp}%,${mt},${m},${mp}%
 "
 done
 

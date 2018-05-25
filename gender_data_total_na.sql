@@ -19,16 +19,12 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	JOIN people pe ON pe.id=p2p.person_id
 	JOIN identifiers i ON i.person_id=pe.id
 	JOIN red19.persons_for_analysis pfa ON pfa.xkonto = i.value
-	JOIN publication_identifiers pi ON pi.publication_version_id=pv.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
 	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
 	AND pfa.anstlpnr = 1
-	AND pi.identifier_value IN (
-		SELECT isi_id FROM cwts.fielddata WHERE "n*%" >= 90
-	)
 ) AS prop
 --WHERE prop.title NOT IN ('övriga')
 GROUP BY prop.title, prop.person_kon

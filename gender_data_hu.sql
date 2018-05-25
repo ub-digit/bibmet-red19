@@ -26,7 +26,7 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	AND i.source_id = 1
 	AND pfa.anstlpnr = 1
 	AND p.id IN (
-		SELECT pubid FROM legnor.master_2018 WHERE update_level = 2
+		SELECT pubid FROM legnor.master_2018 --WHERE update_level = 2
 		/*SELECT pubid FROM legnor.handels WHERE update_level = 2 UNION
 		SELECT pubid FROM legnor.humfak WHERE update_level = 2 UNION
 		SELECT pubid FROM legnor.it WHERE update_level = 2 UNION
