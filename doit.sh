@@ -2,8 +2,8 @@
 
 STARTYEAR="2013"
 ENDYEAR="2017"
-DEPTS_FOR_SA="departments_sa_short.txt"
-DEPTS_FOR_NON_SA="departments_non_sa_short.txt"
+DEPTS_FOR_SA="departments_sa.txt"
+DEPTS_FOR_NON_SA="departments_non_sa.txt"
 
 rm result/*.x*
 rm -rf dType extAuth gender norList oa
