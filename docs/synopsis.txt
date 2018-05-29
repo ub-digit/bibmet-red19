@@ -128,8 +128,8 @@ HUMSAM
 [X] norList - ta bort level 0
 [X] OA
 [X] extAuth
-[ ] gender
-  [ ] gender - NonSA en kolumn med PNor hur många i antal som finns med i legnor, "share of level 2" skall räkna mot PNor istället för "publications"
+[X] gender
+  [X] gender - NonSA en kolumn med PNor hur många i antal som finns med i legnor, "share of level 2" skall räkna mot PNor istället för "publications"
 
 NAT
 [X] dType
@@ -137,8 +137,8 @@ NAT
 [X] norList - ta bort böcker och kapitel
 [X] OA
 [X] extAuth - ta med internationella samarbeten
-[ ] gender
-  [ ] gender - SA    en kolumn med PWos hur många i antal som finns med i WoS,    "top 10%" skall räkna mot cwts.fielddata, endast där n*% >= 90
+[X] gender
+  [X] gender - SA    en kolumn med PWos hur många i antal som finns med i WoS,    "top 10%" skall räkna mot cwts.fielddata, endast där n*% >= 90
 [X] WoS - skall antagligen inte göras
 
 
@@ -184,6 +184,11 @@ and (end_year > 2016 or end_year is null)
 
 
 Frågor till Bibliometrikerna:
-[ ] 1a. Vilka institutioner på SA/NatFak skall vi köra detta på?
-[ ] 1b. Vilka institutioner på övriga fakulteter skall vi köra detta på?
+[X] 1a. Vilka institutioner på SA/NatFak skall vi köra detta på?
+[X] 1b. Vilka institutioner på övriga fakulteter skall vi köra detta på?
 
+
+
+
+[ ] Montera bort legnor från Konst
+[ ] Räkna med den nya personaltabellen - red19.personal_2018 - och se om det gör någon skillnad

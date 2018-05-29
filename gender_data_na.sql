@@ -2,13 +2,13 @@
 SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	SELECT pfa.person_kon, 
 	CASE 
-		WHEN pfa.tjben_ben LIKE '%rofessor%' THEN 'Professors'
-		WHEN pfa.tjben_ben LIKE '%ektor%' AND pfa.tjben_ben NOT LIKE '%iträdande%' THEN 'Senior Lecturers'
-		WHEN pfa.tjben_ben LIKE '%djunkt%' THEN 'Lecturers'
-		WHEN pfa.tjben_ben LIKE '%Forskarassistent' THEN 'Research Associates'
-		WHEN pfa.tjben_ben LIKE '%ektor, Biträdande%' THEN 'Associate Senior Lecturers'
-		WHEN pfa.tjben_ben LIKE '%ost%' THEN 'Postdocs'
-		WHEN pfa.tjben_ben LIKE '%oktorand%' THEN 'PhD Studentships'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%rofessor%' THEN 'Professors'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%ektor%' AND pfa.tjben_ben NOT LIKE '%iträdande%' THEN 'Senior Lecturers'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%djunkt%' THEN 'Lecturers'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%Forskarassistent' THEN 'Research Associates'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%ektor, Biträdande%' THEN 'Associate Senior Lecturers'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%ost%' THEN 'Postdocs'
+		WHEN COALESCE(pfa.tjanstebenamning,pfa.tjben_ben) LIKE '%oktorand%' THEN 'PhD Studentships'
 		ELSE                                      'Other Teaching/Research Staff'
 	END as title, p.id
 	FROM publications p
@@ -25,9 +25,12 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
-	AND pfa.anstlpnr = 1
-	AND pi.identifier_value IN (
-		SELECT isi_id FROM cwts.fielddata WHERE "n*%" >= 90
+	--AND pfa.anstlpnr = 1
+	AND p.id IN (
+		SELECT g2e.pubid 
+		FROM cwts.fielddata  fd
+		JOIN "cross".gup2ext g2e ON g2e.isi_id=fd.isi_id
+		WHERE fd."n*%" >= 90
 	)
 ) AS prop
 --WHERE prop.title NOT IN ('övriga')
