@@ -4,6 +4,7 @@ STARTYEAR="2013"
 ENDYEAR="2017"
 DEPTS_FOR_SA="departments_sa.txt"
 DEPTS_FOR_NON_SA="departments_non_sa.txt"
+DEPTS_FOR_KONST="departments_konst.txt"
 
 rm result/*.x*
 rm -rf dType extAuth gender norList oa
@@ -21,7 +22,15 @@ for unit in $departments ; do ./extAuth.sh      "${unit}" "${STARTYEAR}" "${ENDY
 for unit in $departments ; do ./oa.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
 for unit in $departments ; do ./gender.sh       "${unit}" "${ENDYEAR}"   "${ENDYEAR}" "hu"; done
 
+departments=$(cat "${DEPTS_FOR_KONST}")
+for unit in $departments ; do ./dType.sh   "10" "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./norList.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./extAuth.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./oa.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./gender.sh       "${unit}" "${ENDYEAR}"   "${ENDYEAR}" "ko"; done
+
 ./genStatExcel.pl "${DEPTS_FOR_SA}"
 ./genStatExcel.pl "${DEPTS_FOR_NON_SA}"
+./genStatExcel.pl "${DEPTS_FOR_KONST}"
 
 #soffice result/*.xls
