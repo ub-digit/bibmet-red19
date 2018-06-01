@@ -190,5 +190,5 @@ Frågor till Bibliometrikerna:
 
 
 
-[ ] Montera bort legnor från Konst
-[ ] Räkna med den nya personaltabellen - red19.personal_2018 - och se om det gör någon skillnad
+[x] Montera bort legnor från Konst
+[x] Räkna med den nya personaltabellen - red19.personal_2018 - och se om det gör någon skillnad

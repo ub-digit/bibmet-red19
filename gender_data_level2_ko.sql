@@ -1,6 +1,6 @@
 /* PUBLICATION OUTPUT BASED ON GENDER */
-SELECT prop.title, COUNT(prop.id) FROM (
-	SELECT 
+SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
+	SELECT pfa.person_kon, 
 	p18.category as title, p.id
 	FROM publications p
 	JOIN publication_versions pv ON pv.id=p.current_version_id
@@ -17,8 +17,17 @@ SELECT prop.title, COUNT(prop.id) FROM (
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
 	--AND pfa.anstlpnr = 1
-	
+	AND p.id IN (
+		SELECT pubid FROM legnor.master_2018 WHERE update_level = 2
+		/*SELECT pubid FROM legnor.handels WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.humfak WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.it WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.natfak WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.sa WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.samfak WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.utbvet WHERE update_level = 2*/
+	)
 ) AS prop
-WHERE prop.title NOT IN ('övriga')
-GROUP BY prop.title
-ORDER BY COUNT(prop.id) DESC
+--WHERE prop.title NOT IN ('övriga')
+GROUP BY prop.title, prop.person_kon
+ORDER BY prop.title, prop.person_kon

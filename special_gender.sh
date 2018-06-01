@@ -58,17 +58,15 @@ echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 #genderTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_total.sql)
 #genderLevel2=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < gender_level2.sql)
-titleSort=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "title_sort_${VARIANT}.sql")
-genderData=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_data_${VARIANT}.sql")
-genderDataLevel2=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_data_level2_${VARIANT}.sql")
-genderDataTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "gender_data_total_${VARIANT}.sql")
+titleSort=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "special_title_sort_${VARIANT}.sql")
+genderData=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "special_gender_data_${VARIANT}.sql")
+genderDataLevel2=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "special_gender_data_level2_${VARIANT}.sql")
+genderDataTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < "special_gender_data_total_${VARIANT}.sql")
 # -------------------------------------------------- #
 # split each row into elements in two arrays: pubTypeId and pubTypeLabel
 # -------------------------------------------------- #
 
 if [ "${VARIANT}" = "hu" ]; then
-  printf -v result ",Women,,,Men\nStaff category,P,PNor,Level 2,P,PNor,Level 2\n"
-else [ "${VARIANT}" = "ko" ]; then
   printf -v result ",Women,,,Men\nStaff category,P,PNor,Level 2,P,PNor,Level 2\n"
 else
   printf -v result ",Women,,,Men\nStaff category,P,PWos,Top 10%%,P,PWos,Top 10%%\n"

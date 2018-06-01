@@ -1,0 +1,1 @@
+SELECT id,label_en FROM publication_types

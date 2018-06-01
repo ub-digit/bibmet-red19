@@ -13,11 +13,20 @@ SELECT prop.title, COUNT(prop.id) FROM (
 	JOIN red19.personal_2018 p18 ON p18.p_number=pfa.pnr_kod_10
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
+	AND (d.id IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
-	--AND pfa.anstlpnr = 1
-	
+	---AND pfa.anstlpnr = 1
+/*	AND p.id IN (
+		SELECT pubid FROM legnor.master_2018 WHERE update_level = 2
+		SELECT pubid FROM legnor.handels WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.humfak WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.it WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.natfak WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.sa WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.samfak WHERE update_level = 2 UNION
+		SELECT pubid FROM legnor.utbvet WHERE update_level = 2 
+	)*/
 ) AS prop
 WHERE prop.title NOT IN ('övriga')
 GROUP BY prop.title

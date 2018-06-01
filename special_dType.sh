@@ -62,7 +62,7 @@ echo "Processing ${OUTFILEPATH}"
 # -------------------------------------------------- #
 # retrieve sort order, see get_sortorder.sql
 # -------------------------------------------------- #
-sortIx=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < dType_order.sql)
+sortIx=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < special_dType_order.sql)
 # -------------------------------------------------- #
 # split each row into elements in two arrays: pubTypeId and pubTypeLabel
 # -------------------------------------------------- #
@@ -85,7 +85,7 @@ done
 # -------------------------------------------------- #
 # get data for this unit                             #
 # -------------------------------------------------- #
-data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < dType_data.sql)
+data=$(psql -tAF"¤" -Upostgres -h "${DBHOST}"  -v DEPTID=${DEPTID} -v STARTYEAR=${STARTYEAR} -v ENDYEAR=${ENDYEAR} "${BIBMET_DB}" < special_dType_data.sql)
 # create header line (header and each of the years)
 printf -v result "Document type, $(IFS=, ; echo "${yearList[*]}")\n"
 for ((ptid=1;ptid<=numberOfPublicationtypes;ptid++))

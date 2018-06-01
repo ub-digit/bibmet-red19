@@ -1,16 +1,7 @@
 /* PUBLICATION OUTPUT BASED ON GENDER */
 SELECT prop.title, COUNT(prop.id) FROM (
 	SELECT 
-	CASE 
-		WHEN pfa.tjben_ben LIKE '%rofessor%' THEN 'Professors'
-		WHEN pfa.tjben_ben LIKE '%ektor%' AND pfa.tjben_ben NOT LIKE '%iträdande%' THEN 'Senior Lecturers'
-		WHEN pfa.tjben_ben LIKE '%djunkt%' THEN 'Lecturers'
-		WHEN pfa.tjben_ben LIKE '%Forskarassistent' THEN 'Research Associates'
-		WHEN pfa.tjben_ben LIKE '%ektor, Biträdande%' THEN 'Associate Senior Lecturers'
-		WHEN pfa.tjben_ben LIKE '%ost%' THEN 'Postdocs'
-		WHEN pfa.tjben_ben LIKE '%oktorand%' THEN 'PhD Studentships'
-		ELSE                                      'övriga'
-	END as title, p.id
+	p18.category as title, p.id
 	FROM publications p
 	JOIN publication_versions pv ON pv.id=p.current_version_id
 	JOIN people2publications p2p ON p2p.publication_version_id=pv.id
@@ -19,12 +10,13 @@ SELECT prop.title, COUNT(prop.id) FROM (
 	JOIN people pe ON pe.id=p2p.person_id
 	JOIN identifiers i ON i.person_id=pe.id
 	JOIN red19.persons_for_analysis pfa ON pfa.xkonto = i.value
+	JOIN red19.personal_2018 p18 ON p18.p_number=pfa.pnr_kod_10
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
 	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
-	AND pfa.anstlpnr = 1
+	---AND pfa.anstlpnr = 1
 /*	AND p.id IN (
 		SELECT pubid FROM legnor.master_2018 WHERE update_level = 2
 		SELECT pubid FROM legnor.handels WHERE update_level = 2 UNION

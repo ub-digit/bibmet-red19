@@ -1,6 +1,6 @@
 /* PUBLICATION OUTPUT BASED ON GENDER */
-SELECT prop.title, COUNT(prop.id) FROM (
-	SELECT 
+SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
+	SELECT pfa.person_kon, 
 	p18.category as title, p.id
 	FROM publications p
 	JOIN publication_versions pv ON pv.id=p.current_version_id
@@ -11,14 +11,14 @@ SELECT prop.title, COUNT(prop.id) FROM (
 	JOIN identifiers i ON i.person_id=pe.id
 	JOIN red19.persons_for_analysis pfa ON pfa.xkonto = i.value
 	JOIN red19.personal_2018 p18 ON p18.p_number=pfa.pnr_kod_10
+	JOIN publication_identifiers pi ON pi.publication_version_id=pv.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID))
+	AND (d.id IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND i.source_id = 1
 	--AND pfa.anstlpnr = 1
-	
 ) AS prop
-WHERE prop.title NOT IN ('övriga')
-GROUP BY prop.title
-ORDER BY COUNT(prop.id) DESC
+--WHERE prop.title NOT IN ('övriga')
+GROUP BY prop.title, prop.person_kon
+ORDER BY prop.title, prop.person_kon
