@@ -192,3 +192,15 @@ Frågor till Bibliometrikerna:
 
 [x] Montera bort legnor från Konst
 [x] Räkna med den nya personaltabellen - red19.personal_2018 - och se om det gör någon skillnad
+
+
+
+
+Nu har jag varit i kontakt med FIK och vi får köra om neuroscience 2 igen. Gillbergcentrum 1773 ska vara med så som det var i ditt ursprungliga skript (och eftersom det ligger under 1630) men även AgeCap 1872 och Centrum för etik… 1838 ska vara med här. Det var Sahlgrenska.
+
+Sedan har vi matte (371) och eftersom det är en delad inst ska bara GU-delen med och detta är ju baserat på personid. Så här ser villkoret ut när vi tar ut budgetunderlaget:
+
+AND d.id  IN (371,390,391, 1957, 1958, 1959)
+AND p2p.person_id IN (122,920,2230,6456,7663,15395,15891,18377,19835,20514,20518,20522,20866,21717,77129,77141,77148,77164,77275,77278,77279,77297,77306,78396,80763,81177,81331,82037,83001,83456,84204,84371,84432,85193,85213,92471,94680,105654,107072,113731,117772,120486,124425,125121,125271,125272,133747,145601,152535,152727,155673,156002,156779,156933,157250,160387,163062,173047,175708,176655,178298,179836,183846,204170,206571,213161,220822,240502,243794,250821,263407,270245,428803,448843,497951,544478,635533)
+
+Skulle du kunna lägga in samma villkor i RED19-skriptet

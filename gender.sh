@@ -66,9 +66,7 @@ genderDataTotal=$(psql -tAF"¤" -Upostgres -h "${DBHOST}" -v DEPTID="${DEPTID}" 
 # split each row into elements in two arrays: pubTypeId and pubTypeLabel
 # -------------------------------------------------- #
 
-if [ "${VARIANT}" = "hu" ]; then
-  printf -v result ",Women,,,Men\nStaff category,P,PNor,Level 2,P,PNor,Level 2\n"
-else [ "${VARIANT}" = "ko" ]; then
+if [ "${VARIANT}" = "hu" ] || [ "${VARIANT}" = "ko" ]; then
   printf -v result ",Women,,,Men\nStaff category,P,PNor,Level 2,P,PNor,Level 2\n"
 else
   printf -v result ",Women,,,Men\nStaff category,P,PWos,Top 10%%,P,PWos,Top 10%%\n"
@@ -140,4 +138,3 @@ do
 done
 
 echo "${result}" > $OUTFILEPATH
-

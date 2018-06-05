@@ -14,7 +14,7 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
 	AND (d.id IN (:DEPTID))
-	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
+	AND pv.pubyear = :ENDYEAR 
 	AND i.source_id = 1
 	--AND pfa.anstlpnr = 1
 ) AS prop
