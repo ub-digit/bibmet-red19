@@ -48,7 +48,7 @@ for unit in $departments ; do ./special_oa.sh           "${unit}" "${STARTYEAR}"
 for unit in $departments ; do ./special_gender.sh       "${unit}" "${ENDYEAR}" "${ENDYEAR}" "special"; done
 
 
-departments=$(cat "${DEPTS_FOR_SPECIAL}")
+departments=$(cat "${DEPTS_FOR_MARINA}")
 for unit in $departments ; do ./dType_marina.sh    "5" "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
 for unit in $departments ; do ./norList_marina.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
 for unit in $departments ; do ./extAuthNat_marina.sh   "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
