@@ -19,7 +19,7 @@ FROM (
 	) AS norska ON norska.pubid=p.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id IN (:DEPTID))
+--	AND (d.id IN (:DEPTID))
 	AND p2p.person_id IN (SELECT id FROM tmp.marina_vetenskaper_2018)
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR
 	--AND pv.publication_type_id = 5

@@ -10,7 +10,7 @@ JOIN red19.oa oa ON oa.doi=pi.identifier_value
 WHERE p.deleted_at IS NULL
 AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
 AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR
-AND (d.id IN (:DEPTID))
+--AND (d.id IN (:DEPTID))
 AND pi.identifier_code = 'doi'
 AND p2p.person_id IN (SELECT id FROM tmp.marina_vetenskaper_2018)
 AND oa.is_oa = 'True'

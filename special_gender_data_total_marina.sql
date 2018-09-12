@@ -14,7 +14,7 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	JOIN publication_identifiers pi ON pi.publication_version_id=pv.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id IN (:DEPTID))
+--	AND (d.id IN (:DEPTID))
 	AND p2p.person_id IN (SELECT id FROM tmp.marina_vetenskaper_2018)
 	AND pv.pubyear = :ENDYEAR 
 	AND i.source_id = 1

@@ -13,7 +13,7 @@ SELECT prop.title, COUNT(prop.id) FROM (
 	JOIN red19.personal_2018 p18 ON p18.p_number=pfa.pnr_kod_10
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND (d.id IN (:DEPTID))
+--	AND (d.id IN (:DEPTID))
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR 
 	AND p2p.person_id IN (SELECT id FROM tmp.marina_vetenskaper_2018)
 	AND i.source_id = 1
