@@ -7,6 +7,7 @@ DEPTS_FOR_NON_SA="departments_non_sa.txt"
 DEPTS_FOR_KONST="departments_konst.txt"
 DEPTS_FOR_MATTE="departments_matte.txt"
 DEPTS_FOR_SPECIAL="departments_special.txt"
+DEPTS_FOR_MARINA="departments_marina.txt"
 
 rm result/*.x*
 rm -rf dType extAuth gender norList oa
@@ -46,11 +47,20 @@ for unit in $departments ; do ./special_extAuthNat.sh   "${unit}" "${STARTYEAR}"
 for unit in $departments ; do ./special_oa.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
 for unit in $departments ; do ./special_gender.sh       "${unit}" "${ENDYEAR}" "${ENDYEAR}" "special"; done
 
+
+departments=$(cat "${DEPTS_FOR_SPECIAL}")
+for unit in $departments ; do ./dType_marina.sh    "5" "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./norList_marina.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./extAuthNat_marina.sh   "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./oa_marina.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./gender_marina.sh       "${unit}" "${ENDYEAR}" "${ENDYEAR}" "marina"; done
+
 ./genStatExcel.pl "${DEPTS_FOR_SA}"
 ./genStatExcel.pl "${DEPTS_FOR_NON_SA}"
 ./genStatExcel.pl "${DEPTS_FOR_KONST}"
 ./genStatExcel.pl "${DEPTS_FOR_MATTE}"
 ./genStatExcel.pl "${DEPTS_FOR_SPECIAL}"
+./genStatExcel.pl "${DEPTS_FOR_MARINA}"
 
 #soffice result/*.xls
 
