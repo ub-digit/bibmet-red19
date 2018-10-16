@@ -8,6 +8,10 @@ DEPTS_FOR_KONST="departments_konst.txt"
 DEPTS_FOR_MATTE="departments_matte.txt"
 DEPTS_FOR_SPECIAL="departments_special.txt"
 DEPTS_FOR_MARINA="departments_marina.txt"
+DEPTS_FOR_NEURO1="departments_neuro1.txt"
+DEPTS_FOR_NEURO2="departments_neuro2.txt"
+DEPTS_FOR_NEURO3="departments_neuro3.txt"
+
 
 rm result/*.x*
 rm -rf dType extAuth gender norList oa
@@ -55,12 +59,36 @@ for unit in $departments ; do ./extAuthNat_marina.sh   "${unit}" "${STARTYEAR}" 
 for unit in $departments ; do ./oa_marina.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
 for unit in $departments ; do ./gender_marina.sh       "${unit}" "${ENDYEAR}" "${ENDYEAR}" "marina"; done
 
+departments=$(cat "${DEPTS_FOR_NEURO1}")
+for unit in $departments ; do ./dType_neuro1.sh    "5" "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./norList_neuro1.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./extAuthNat_neuro1.sh   "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./oa_neuro1.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./gender.sh              "${unit}" "${ENDYEAR}" "${ENDYEAR}" "n1"; done
+
+departments=$(cat "${DEPTS_FOR_NEURO2}")
+for unit in $departments ; do ./dType_neuro2.sh    "5" "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./norList_neuro2.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./extAuthNat_neuro2.sh   "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./oa_neuro2.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./gender.sh              "${unit}" "${ENDYEAR}" "${ENDYEAR}" "n2"; done
+
+departments=$(cat "${DEPTS_FOR_NEURO3}")
+for unit in $departments ; do ./dType_neuro3.sh    "5" "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./norList_neuro3.sh      "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./extAuthNat_neuro3.sh   "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./oa_neuro3.sh           "${unit}" "${STARTYEAR}" "${ENDYEAR}"; done
+for unit in $departments ; do ./gender.sh              "${unit}" "${ENDYEAR}" "${ENDYEAR}" "n3"; done
+
 ./genStatExcel.pl "${DEPTS_FOR_SA}"
 ./genStatExcel.pl "${DEPTS_FOR_NON_SA}"
 ./genStatExcel.pl "${DEPTS_FOR_KONST}"
 ./genStatExcel.pl "${DEPTS_FOR_MATTE}"
 ./genStatExcel.pl "${DEPTS_FOR_SPECIAL}"
 ./genStatExcel.pl "${DEPTS_FOR_MARINA}"
+./genStatExcel.pl "${DEPTS_FOR_NEURO1}"
+./genStatExcel.pl "${DEPTS_FOR_NEURO2}"
+./genStatExcel.pl "${DEPTS_FOR_NEURO3}"
 
 #soffice result/*.xls
 
