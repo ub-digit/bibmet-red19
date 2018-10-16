@@ -1,6 +1,6 @@
 SELECT pubs.pubyear, pubs.update_level, pubs.publication_type_id, pubs.publication_type_label_en, count(DISTINCT pubs.id)
 FROM (
-	SELECT pv.pubyear, pv.publication_type_id, pt.label_en AS publication_type_label_en, COALESCE(norska.update_level::integer, 0::integer) AS update_level, p.id
+	SELECT pv.pubyear, pv.publication_type_id, pt.label_en AS publication_type_label_en, COALESCE(norska.level::integer, 0::integer) AS update_level, p.id
 	FROM publications p
 	JOIN publication_versions pv ON pv.id=p.current_version_id
 	JOIN people2publications p2p ON p2p.publication_version_id=pv.id
@@ -10,7 +10,7 @@ FROM (
 	JOIN people pe ON pe.id=p2p.person_id
 	JOIN identifiers i ON i.person_id=pe.id
 	LEFT JOIN (
-		SELECT pubid, update_level, nor_points FROM legnor.master_2018
+		SELECT pubid, level FROM red19.sa_norska
 	    /* SELECT pubid, update_level, nor_points FROM legnor.handels UNION
 	    SELECT pubid, update_level, nor_points FROM legnor.humfak UNION
 	    SELECT pubid, update_level, nor_points FROM legnor.it UNION
