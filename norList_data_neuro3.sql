@@ -21,7 +21,7 @@ FROM (
 	) AS norska ON norska.pubid=p.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)
-	AND ( (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID)) OR (i.value IN (SELECT xkonto FROM red19.neuro3) AND d2p2p.department_id = 1384) )
+	AND ( (d.id IN (:DEPTID) OR d.parentid IN (:DEPTID) OR d.grandparentid IN (:DEPTID)) OR (i.value IN (SELECT xkonto FROM red19.neuro3) AND (d.id IN (1384) OR d.parentid IN (1384) OR d.grandparentid IN (1384))) )
 	AND i.source_id = 1
 	AND pv.pubyear BETWEEN :STARTYEAR AND :ENDYEAR
 	--AND pv.publication_type_id = 5
