@@ -8,7 +8,7 @@ FROM (
 	JOIN departments d ON d.id=d2p2p.department_id
 	JOIN publication_types pt ON pt.id=pv.publication_type_id
 	LEFT JOIN (
-		SELECT pubid, update_level, nor_points FROM legnor.master_2018
+		--SELECT pubid, update_level, nor_points FROM legnor.master_2018
 	    /* SELECT pubid, update_level, nor_points FROM legnor.handels UNION
 	    SELECT pubid, update_level, nor_points FROM legnor.humfak UNION
 	    SELECT pubid, update_level, nor_points FROM legnor.it UNION
@@ -16,6 +16,13 @@ FROM (
 	    SELECT pubid, update_level, nor_points FROM legnor.sa UNION
 	    SELECT pubid, update_level, nor_points FROM legnor.samfak UNION
 	    SELECT pubid, update_level, nor_points FROM legnor.utbvet */
+	    SELECT pubid, update_level, nor_points FROM legnor.handels UNION
+	    SELECT pubid, update_level, nor_points FROM legnor.humfak UNION
+	    SELECT pubid, update_level, nor_points FROM legnor.it UNION
+	    SELECT pubid, update_level, nor_points FROM legnor.natfak UNION
+	    SELECT pubid, update_level, nor_points FROM legnor.sa UNION
+	    SELECT pubid, update_level, nor_points FROM legnor.samfak UNION
+	    SELECT pubid, update_level, nor_points FROM legnor.utbvet
 	) AS norska ON norska.pubid=p.id
 	WHERE p.deleted_at IS NULL
 	AND (p.process_state NOT IN ('DRAFT', 'PREDRAFT') OR p.process_state IS NULL)

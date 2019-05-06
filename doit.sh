@@ -1,7 +1,7 @@
 #!/bin/bash
 
-STARTYEAR="2013"
-ENDYEAR="2017"
+STARTYEAR="2014"
+ENDYEAR="2018"
 DEPTS_FOR_SA="departments_sa.txt"
 DEPTS_FOR_NON_SA="departments_non_sa.txt"
 DEPTS_FOR_KONST="departments_konst.txt"

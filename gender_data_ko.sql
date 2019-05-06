@@ -18,7 +18,7 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 	AND i.source_id = 1
 	--AND pfa.anstlpnr = 1
 	AND p.id IN (
-		SELECT pubid FROM legnor.master_2018 --WHERE update_level = 2
+		--SELECT pubid FROM legnor.master_2018 --WHERE update_level = 2
 		/*SELECT pubid FROM legnor.handels WHERE update_level = 2 UNION
 		SELECT pubid FROM legnor.humfak WHERE update_level = 2 UNION
 		SELECT pubid FROM legnor.it WHERE update_level = 2 UNION
@@ -26,7 +26,13 @@ SELECT prop.title, prop.person_kon, COUNT(prop.id) FROM (
 		SELECT pubid FROM legnor.sa WHERE update_level = 2 UNION
 		SELECT pubid FROM legnor.samfak WHERE update_level = 2 UNION
 		SELECT pubid FROM legnor.utbvet WHERE update_level = 2*/
-	)
+		SELECT pubid FROM legnor.handels UNION
+		SELECT pubid FROM legnor.humfak UNION
+		SELECT pubid FROM legnor.it UNION
+		SELECT pubid FROM legnor.natfak UNION
+		SELECT pubid FROM legnor.sa UNION
+		SELECT pubid FROM legnor.samfak UNION
+		SELECT pubid FROM legnor.utbvet 	)
 ) AS prop
 --WHERE prop.title NOT IN ('övriga')
 GROUP BY prop.title, prop.person_kon
